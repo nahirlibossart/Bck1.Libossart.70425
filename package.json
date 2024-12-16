@@ -1,14 +1,18 @@
 {
   "name": "bck1-libossart",
   "version": "1.0.0",
+  "type": "module",
   "main": "app.js",
   "scripts": {
+    "start": "node ./src/app.js",
+    "dev": "node --watch ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "express": "^4.21.2",
     "moment": "^2.30.1"
   }
 }
