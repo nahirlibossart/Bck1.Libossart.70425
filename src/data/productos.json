@@ -4,7 +4,9 @@
           "title": "Cien Años de Soledad",
           "description": "De Gabriel García Marquez",
           "price": 25,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1015",
           "stock": 200,
           "status": "true",
@@ -15,7 +17,9 @@
           "title": "Zona de Clivaje",
           "description": "De Liliana Heker",
           "price": 22,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1013",
           "stock": 150,
           "status": "true",
@@ -26,7 +30,9 @@
           "title": "Fiesta",
           "description": "De Ernest Hemingway",
           "price": 18,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1009",
           "stock": 80,
           "status": "true",
@@ -37,7 +43,9 @@
           "title": "La Uruguaya",
           "description": "De Pedro Mairal",
           "price": 30,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1023",
           "stock": 210,
           "status": "true",
@@ -48,7 +56,9 @@
           "title": "Las Aventuras de la China Iron",
           "description": "De Gabriela Cabezón Cámara",
           "price": 35,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1002",
           "stock": 150,
           "status": "true",
@@ -59,7 +69,9 @@
           "title": "Los Restos del Día",
           "description": "De Kasuo Ishiguro",
           "price": 32,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1008",
           "stock": 90,
           "status": "true",
@@ -70,7 +82,9 @@
           "title": "Es un Río",
           "description": "De Selva Almada",
           "price": 25,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1018",
           "stock": 200,
           "status": "true",
@@ -81,7 +95,9 @@
           "title": "Ensayo sobre la Ceguera",
           "description": "De José Saramago",
           "price": 35,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1012",
           "stock": 225,
           "status": "true",
@@ -92,7 +108,9 @@
           "title": "La Insoportable Levedad del Ser",
           "description": "De Milan Kundera",
           "price": 18,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1004",
           "stock": 50,
           "status": "true",
@@ -103,11 +121,22 @@
           "title": "Pedro Páramo",
           "description": "De Juan Rulfo",
           "price": 15,
-          "thumbnail": ["Ruta de imagen"],
+          "thumbnail": [
+               "Ruta de imagen"
+          ],
           "code": "1026",
           "stock": 38,
           "status": "true",
           "category": "Libro"
+     },
+     {
+          "id": 11,
+          "title": "Cristo",
+          "description": "kk",
+          "price": 2000,
+          "code": 20,
+          "stock": 1000,
+          "status": "true",
+          "category": "libro"
      }
-     
 ]

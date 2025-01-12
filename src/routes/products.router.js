@@ -61,6 +61,8 @@ router.post('/', async (req, res) => {
 
 		let newProduct = await ProductManager.addProduct({ title, description, price, code, stock, status, category });
 
+		req.socket.emit("newProduct", newProduct)
+
 		res.setHeader('Content-Type', 'application/json');
 		return res
 			.status(201)
@@ -114,7 +116,7 @@ router.put("/:pid", async (req, res) => {
 	}
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:pid', async(req, res) => {
 
 	let { pid } = req.params;
 	pid = Number(pid);
@@ -127,10 +129,14 @@ router.delete('/:id', async(req, res) => {
 
 		let deletedProduct = await ProductManager.deleteProductById(pid);
 
+		req.socket.emit("deletedProduct", deletedProduct)
+
 		if(!deletedProduct) {
 			return res.status(404).json({ error: `No se encontró el producto con id ${pid}` })
 		}
 		
+		
+
 		res.setHeader('Content-Type', 'application/json');
 		return res.status(200).json({ payload: `Producto con id ${pid} eliminado exitosamente`});
 	} catch (error) {

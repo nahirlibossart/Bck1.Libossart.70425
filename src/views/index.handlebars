@@ -1,0 +1,20 @@
+<h2>Index</h2>
+<hr>
+
+{{!-- <br>
+<a href="/">Home Page</a> --}}
+
+<ul>
+    {{#each products}}
+        <li>
+            {{title}} -  <strong>{{description}}</strong>
+        </li>
+    {{/each}}
+</ul>
+
+{{>menu}}
+
+{{!-- <script src="/js/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+{{!-- <script src="/socket.io/socket.io.js"></script> --}}
+<script src="/js/index.js"></script> 
