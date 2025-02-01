@@ -1,0 +1,13 @@
+<h2>Carritos</h2>
+
+<strong>{{>menu}}</strong>
+
+<hr>
+
+<ul>
+    {{#each carts}}
+        <li>
+            <a href="/cart/{{_id}}">{{name}}</a>
+        </li>
+    {{/each}}
+</ul>

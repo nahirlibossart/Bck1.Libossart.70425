@@ -1,0 +1,31 @@
+<h2>Productos</h2>
+
+<strong>{{>menu}}</strong>
+
+<hr>
+
+<ul>
+    {{#each products}}
+        <li>
+            {{title}} -  <strong>{{description}}</strong>
+        </li>
+    {{/each}}
+</ul>
+
+<br>
+
+<a href="/products?page=1">Pág.1</a>
+
+{{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}">Pág.Ant.</a>
+{{else}}
+    <a href="/products?page={{prevPage}}" class="disabled">Pág.Ant.</a>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}">Pág.Sig.</a>
+{{else}}
+    <a href="/products?page={{nextPage}}" class="disabled">Pág.Sig.</a>
+{{/if}}
+
+<a href="/products?page={{totalPages}}">Ult.Pág</a>

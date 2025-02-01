@@ -48,7 +48,7 @@ export class ProductManager {
 
 	static async modifyProduct(pid, modifications = {}) {
 		let products = await this.getProducts();
-		let indexProduct = products.findIndex(p => p.pid === pid);
+		let indexProduct = products.findIndex((p) => p.pid === pid);
 		if (indexProduct === -1) {
 			throw new Error(`No existe product con id ${pid}`);
 		}
@@ -67,7 +67,7 @@ export class ProductManager {
 		let products = await this.getProducts();
 		let deletedProduct = products.find((p) => p.pid === pid);
 
-		await this.#fileDelete(pid)
+		await this.#fileDelete(pid);
 
 		return deletedProduct;
 	}

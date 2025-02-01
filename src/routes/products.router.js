@@ -1,20 +1,12 @@
 import { Router } from 'express';
-
-import { ProductManager } from '../dao/ProductManager.js';
+import { ProductsDaoMongo } from '../dao/ProductsDaoMongo.js';
 import { processErrors } from '../utils.js';
-
+import { isValidObjectId } from 'mongoose';
 export const router = Router();
-
-ProductManager.setPath('./src/data/productos.json');
 
 router.get('/', async (req, res) => {
 	try {
-		let products = await ProductManager.getProducts();
-
-		let {limit}= req.query
-		if (limit) {
-			products= products.slice(0, limit)
-		}
+		let products = await ProductsDaoMongo.getProducts();
 
 		res.setHeader('Content-Type', 'application/json');
 		return res.status(200).json({ products });
@@ -25,18 +17,16 @@ router.get('/', async (req, res) => {
 
 router.get('/:pid', async (req, res) => {
 	let { pid } = req.params;
-	pid = Number(pid);
-	if (isNaN(pid)) {
+
+	if (!isValidObjectId(pid)) {
 		res.setHeader('Content-Type', 'application/json');
-		return res.status(400).json({ error: `Se requiere un id numérico` });
+		return res
+			.status(400)
+			.json({ error: `Se requiere un id de mongodb válido` });
 	}
 
 	try {
-		let product = await ProductManager.getProductsById(pid);
-		if (!product) {
-			res.setHeader('Content-Type', 'application/json');
-			return res.status(400).json({ error: `No existe product con id ${pid}` });
-		}
+		let product = await ProductsDaoMongo.getProductBy(pid);
 
 		res.setHeader('Content-Type', 'application/json');
 		return res.status(200).json({ product });
@@ -46,22 +36,33 @@ router.get('/:pid', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-	let { title, description, price, code, stock, status, category} = req.body;
-	if (!title || !description || !price || !code || !stock || !status|| !category) {
+	let { code, title, ...otros } = req.body;
+	if (!code || !title) {
 		res.setHeader('Content-Type', 'application/json');
-		return res.status(400).json({ error: `Todos los campos del producto son requeridos a excepción de thumbnail` });
+		return res.status(400).json({ error: `Code y title son requeridos` });
 	}
 
 	try {
-		let exist = await ProductManager.getProductByTitle(title);
-		if (exist) {
+		let existTitle = await ProductsDaoMongo.getProductBy({ title });
+		if (existTitle) {
 			res.setHeader('Content-Type', 'application/json');
-			return res.status(400).json({ error: `Ya existe ${title} en DB` });
+			return res
+				.status(400)
+				.json({ error: `El producto con title: ${title} ya existe en DB` });
+		}
+		let existCode = await ProductsDaoMongo.getProductBy({ code });
+		if (existCode) {
+			res.setHeader('Content-Type', 'application/json');
+			return res
+				.status(400)
+				.json({ error: `El producto con code ${code} ya existe en DB` });
 		}
 
-		let newProduct = await ProductManager.addProduct({ title, description, price, code, stock, status, category });
-
-		req.socket.emit("newProduct", newProduct)
+		let newProduct = await ProductsDaoMongo.addProduct({
+			code,
+			title,
+			...otros,
+		});
 
 		res.setHeader('Content-Type', 'application/json');
 		return res
@@ -72,75 +73,55 @@ router.post('/', async (req, res) => {
 	}
 });
 
-router.put("/:pid", async (req, res) => {
+router.put('/:pid', async (req, res) => {
 	let { pid } = req.params;
-	pid = Number(pid);
-	if (isNaN(pid)) {
+
+	if (!isValidObjectId(pid)) {
 		res.setHeader('Content-Type', 'application/json');
-		return res.status(400).json({ error: `Se requiere un id numérico` });
+		return res
+			.status(400)
+			.json({ error: `Se requiere un id de mongodb válido` });
 	}
 
 	let toModify = req.body;
 
-	 if (toModify.pid) {
+	if (toModify.pid) {
 		res.setHeader('Content-Type', 'application/json');
 		return res.status(400).json({ error: `No está permitido modificar id` });
-	} 
+	}
 
 	try {
-		 if (toModify.title) {
-			let products = await ProductManager.getProducts();
-			let exist = products.find(p =>p.title.toLowerCase() === toModify.title.trim().toLowerCase() && p.pid != pid
-			);
-			if (exist) {
-				res.setHeader('Content-Type', 'application/json');
-				return res
-					.status(400)
-					.json({
-						error: `Ya existe un producto con title ${toModify.title} en DB. Tiene id ${exist.pid}`,
-					});
-			}
-		} 
-
-		let modifiedProduct = await ProductManager.modifyProduct(pid, toModify);
+		let modifiedProduct = await ProductsDaoMongo.updateProduct(pid, toModify);
 
 		res.setHeader('Content-Type', 'application/json');
-		return res
-			.status(200)
-			.json({
-				payload: `Se modició el producto con id ${pid}`,
-				modifiedProduct,
-			});
+		return res.status(200).json({
+			payload: `Se modició el producto con id ${pid}`,
+			modifiedProduct,
+		});
 	} catch (error) {
 		processErrors(res, error);
 	}
 });
 
-router.delete('/:pid', async(req, res) => {
-
+router.delete('/:pid', async (req, res) => {
 	let { pid } = req.params;
-	pid = Number(pid);
-	if (isNaN(pid)) {
+
+	if (!isValidObjectId(pid)) {
 		res.setHeader('Content-Type', 'application/json');
-		return res.status(400).json({ error: `Se requiere un id numérico` });
+		return res
+			.status(400)
+			.json({ error: `Se requiere un id de mongodb válido` });
 	}
 
 	try {
-
-		let deletedProduct = await ProductManager.deleteProductById(pid);
-
-		req.socket.emit("deletedProduct", deletedProduct)
-
-		if(!deletedProduct) {
-			return res.status(404).json({ error: `No se encontró el producto con id ${pid}` })
-		}
-		
-		
+		let deletedProduct = await ProductsDaoMongo.deleteProduct(pid);
 
 		res.setHeader('Content-Type', 'application/json');
-		return res.status(200).json({ payload: `Producto con id ${pid} eliminado exitosamente`});
+		return res.status(200).json({
+			payload: `Producto con id ${pid} eliminado exitosamente`,
+			deletedProduct,
+		});
 	} catch (error) {
 		processErrors(res, error);
 	}
-
 });

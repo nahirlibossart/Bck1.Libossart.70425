@@ -1,47 +1,40 @@
-import express from "express"
-import { engine } from "express-handlebars";
-import {router as vistasRouter} from "./routes/views.router.js" 
-import { router as productsRouter} from "./routes/products.router.js"
-import { router as cartsRouter} from "./routes/carts.router.js" 
+import express from 'express';
+import mongoose from 'mongoose';
+import { engine } from 'express-handlebars';
 
-import { Server } from "socket.io";
+import { router as vistasRouter } from './routes/views.router.js';
+import { router as productsRouter } from './routes/products.router.js';
+import { router as cartsRouter } from './routes/carts.router.js';
 
-const PORT=8080;
+const PORT = 8080;
 
-let io
-
-const app=express();
+const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-app.use(express.static("./src/public"))
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('./src/public'));
 
-app.engine("handlebars", engine())
-app.set("view engine", "handlebars")
-app.set("views", "./src/views")
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './src/views');
 
-app.use("/", vistasRouter)
-app.use("/realtimeproducts",
-    (req, res, next) => {
-        req.socket= io
-        next()
-    },
-    productsRouter
-)
+app.use('/', vistasRouter);
 
-app.use(
-    "/api/products", 
-    (req, res, next) => {
-        req.socket= io
-        next()
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
 
-    },
-    productsRouter)
-
-app.use("/api/carts", cartsRouter) 
-
-const server= app.listen(PORT,()=>{
-    console.log(`Server escuchando en puerto ${PORT}`);
+const server = app.listen(PORT, () => {
+	console.log(`Server escuchando en puerto ${PORT}`);
 });
 
-io=new Server(server) 
+try {
+	await mongoose.connect(
+		'mongodb+srv://nahirlibossart:Backend1@cluster0.j62ah.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+		{
+			dbName: 'ecommerce',
+		}
+	);
+	console.log(`DB online!`);
+} catch (error) {
+	console.log(`Error al conectar a db: ${error.message}`);
+}

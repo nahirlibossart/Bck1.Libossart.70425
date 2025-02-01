@@ -52,7 +52,7 @@ export class CarstManager {
 		if (exist) {
 			exist.quantity++;
 		} else {
-			cart.products.push({ product: pid, quantity: 1 });
+			cart.products.push({ product: id, quantity: 1 });
 		}
 
 		await this.#fileRecord(JSON.stringify(carts, null, 5));
